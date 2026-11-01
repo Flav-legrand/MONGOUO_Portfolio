@@ -1,0 +1,8 @@
+// Configuration Cloudflare Workers : sert le site statique du dossier docs/
+{
+  "name": "mongouo-portfolio",
+  "compatibility_date": "2026-10-01",
+  "assets": {
+    "directory": "./docs"
+  }
+}
