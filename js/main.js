@@ -123,6 +123,25 @@ const lightbox = document.getElementById('lightbox');
 if (lightbox) {
     const lightboxImg = lightbox.querySelector('img');
     const lightboxLegende = lightbox.querySelector('.lightbox-legende');
+    const btnPrecedent = lightbox.querySelector('.lightbox-precedent');
+    const btnSuivant = lightbox.querySelector('.lightbox-suivant');
+    // Galerie en cours : toutes les captures du projet cliqué, y compris celles masquées dans la carte
+    let galerie = [];
+    let position = 0;
+
+    const afficherCapture = () => {
+        const img = galerie[position];
+        lightboxImg.src = img.src;
+        lightboxImg.alt = img.alt;
+        const compteur = galerie.length > 1 ? ` (${position + 1} / ${galerie.length})` : '';
+        lightboxLegende.textContent = img.alt + compteur;
+        btnPrecedent.hidden = btnSuivant.hidden = galerie.length < 2;
+    };
+
+    const deplacer = pas => {
+        position = (position + pas + galerie.length) % galerie.length;
+        afficherCapture();
+    };
 
     const fermerLightbox = () => {
         lightbox.classList.remove('ouverte');
@@ -131,20 +150,37 @@ if (lightbox) {
 
     document.querySelectorAll('img[data-lightbox]').forEach(img => {
         img.addEventListener('click', () => {
-            lightboxImg.src = img.src;
-            lightboxImg.alt = img.alt;
-            lightboxLegende.textContent = img.alt;
+            const projet = img.closest('.projet-card, .projet-vedette');
+            galerie = projet ? [...projet.querySelectorAll('img[data-lightbox]')] : [img];
+            position = galerie.indexOf(img);
+            afficherCapture();
             lightbox.classList.add('ouverte');
             lightbox.setAttribute('aria-hidden', 'false');
         });
     });
+
+    btnPrecedent.addEventListener('click', e => { e.stopPropagation(); deplacer(-1); });
+    btnSuivant.addEventListener('click', e => { e.stopPropagation(); deplacer(1); });
 
     lightbox.addEventListener('click', e => {
         if (e.target !== lightboxImg) fermerLightbox();
     });
 
     document.addEventListener('keydown', e => {
+        if (!lightbox.classList.contains('ouverte')) return;
         if (e.key === 'Escape') fermerLightbox();
+        if (e.key === 'ArrowLeft') deplacer(-1);
+        if (e.key === 'ArrowRight') deplacer(1);
+    });
+
+    // Glissement du doigt sur mobile
+    let departX = null;
+    lightbox.addEventListener('touchstart', e => { departX = e.touches[0].clientX; }, { passive: true });
+    lightbox.addEventListener('touchend', e => {
+        if (departX === null) return;
+        const ecart = e.changedTouches[0].clientX - departX;
+        if (Math.abs(ecart) > 50) deplacer(ecart < 0 ? 1 : -1);
+        departX = null;
     });
 }
 
