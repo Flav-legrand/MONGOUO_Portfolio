@@ -102,6 +102,52 @@ projetCards.forEach(card => {
     projetObserver.observe(card);
 });
 
+// Filtres des projets
+const filtreBtns = document.querySelectorAll('.filtre-btn');
+const projetsFiltrables = document.querySelectorAll('[data-categories]');
+
+filtreBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+        const filtre = btn.dataset.filtre;
+        filtreBtns.forEach(b => b.classList.toggle('active', b === btn));
+        projetsFiltrables.forEach(projet => {
+            const categories = projet.dataset.categories.split(' ');
+            projet.classList.toggle('projet-cache', filtre !== 'tous' && !categories.includes(filtre));
+        });
+    });
+});
+
+// Visionneuse des captures
+const lightbox = document.getElementById('lightbox');
+
+if (lightbox) {
+    const lightboxImg = lightbox.querySelector('img');
+    const lightboxLegende = lightbox.querySelector('.lightbox-legende');
+
+    const fermerLightbox = () => {
+        lightbox.classList.remove('ouverte');
+        lightbox.setAttribute('aria-hidden', 'true');
+    };
+
+    document.querySelectorAll('img[data-lightbox]').forEach(img => {
+        img.addEventListener('click', () => {
+            lightboxImg.src = img.src;
+            lightboxImg.alt = img.alt;
+            lightboxLegende.textContent = img.alt;
+            lightbox.classList.add('ouverte');
+            lightbox.setAttribute('aria-hidden', 'false');
+        });
+    });
+
+    lightbox.addEventListener('click', e => {
+        if (e.target !== lightboxImg) fermerLightbox();
+    });
+
+    document.addEventListener('keydown', e => {
+        if (e.key === 'Escape') fermerLightbox();
+    });
+}
+
 // Formulaire de contact
 const contactForm = document.getElementById('contactForm');
 

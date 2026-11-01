@@ -42,6 +42,12 @@ if (Test-Path "assets/images/Flav.jpg") {
     Write-Host "   Avertissement: Image Flav.jpg non trouvee" -ForegroundColor Yellow
 }
 
+# Copier les captures des projets
+if (Test-Path "assets/images/projets") {
+    Copy-Item assets/images/projets docs/assets/images/ -Recurse -Force
+    Write-Host "   Captures des projets copiees" -ForegroundColor Green
+}
+
 # Copier le CV s'il existe
 if (Test-Path "assets/cv/CV_Flav-Legrand.pdf") { 
     Copy-Item assets/cv/CV_Flav-Legrand.pdf docs/assets/cv/ -Force
