@@ -886,6 +886,12 @@ section {
     box-shadow: var(--shadow);
 }
 
+.vedette-miniatures img:only-child {
+    grid-column: 1 / -1;
+    height: 180px;
+    object-position: center;
+}
+
 .vedette-principale:hover img,
 .vedette-miniatures img:hover {
     transform: scale(1.03);
