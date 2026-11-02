@@ -209,7 +209,7 @@ if (contactForm) {
                 alert('✅ Message envoyé avec succès ! Je vous répondrai rapidement.');
                 contactForm.reset();
             } else {
-                alert('❌ Erreur: ' + (result.message || 'Une erreur est survenue.'));
+                alert('❌ Erreur : ' + (result.message || 'Une erreur est survenue.'));
             }
         } catch (error) {
             alert('❌ Erreur de connexion. Veuillez réessayer.');
